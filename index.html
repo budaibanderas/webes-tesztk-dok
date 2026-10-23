@@ -214,7 +214,7 @@
 
         // Gyorsulásmérő kezelése
         let lastX = null, lastY = null, lastZ = null;
-        const threshold = 12; // rázási érzékenység határértéke
+        const threshold = 8; // rázási érzékenység határértéke
 
         function handleMotion(event) {
             // Egyes újabb Androidokon és iOS-en az event.acceleration-t kell használni, ha az IncludingGravity nem megy
@@ -226,8 +226,8 @@
                 let deltaY = Math.abs(acc.y - lastY);
                 let deltaZ = Math.abs(acc.z - lastZ);
         
-                // Lejjebb vettem a küszöböt 12-re, hogy kisebb rázásra is azonnal beugorjon
-                const currentThreshold = 12; 
+                // Lejjebb vettem a küszöböt 8-ra, hogy kisebb rázásra is azonnal beugorjon
+                const currentThreshold = 8; 
         
                 // Ha bármelyik tengelyen hirtelen megmozdul a telefon
                 if (deltaX > currentThreshold || deltaY > currentThreshold || deltaZ > currentThreshold) {
