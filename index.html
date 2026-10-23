@@ -233,8 +233,8 @@
 
         // Mozgásérzékelő aktiválása engedéllyel
         function initMotion() {
+            // Ellenőrizzük, hogy az iOS-es engedélykérő funkció létezik-e
             if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-                // iOS specifikus engedélykérés
                 DeviceMotionEvent.requestPermission()
                     .then(permissionState => {
                         if (permissionState === 'granted') {
@@ -242,15 +242,19 @@
                             motionStatus.textContent = "Mozgásérzékelő: AKTÍV 📳";
                             motionStatus.style.color = "#4ecc71";
                         } else {
-                            motionStatus.textContent = "Mozgásérzékelő: Megtagadva";
+                            motionStatus.textContent = "Mozgásérzékelő: Letiltva a telefonodon";
                             motionStatus.style.color = "#e74c3c";
+                            alert("Kérlek, engedélyezd a mozgásérzékelőt a játékhoz!");
                         }
                     })
-                    .catch(console.error);
+                    .catch(err => {
+                        motionStatus.textContent = "Szenzor hiba";
+                        alert("Hiba történt: " + err.message);
+                    });
             } else {
-                // Android és Asztali böngészők
+                // Android, PC vagy Mac böngészők (itt nem kötelező a felugró engedélyablak)
                 window.addEventListener('devicemotion', handleMotion);
-                motionStatus.textContent = "Mozgásérzékelő: AKTÍV (vagy készen áll)";
+                motionStatus.textContent = "Mozgásérzékelő: AKTÍV";
                 motionStatus.style.color = "#4ecc71";
             }
         }
