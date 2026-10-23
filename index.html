@@ -262,14 +262,17 @@
         document.getElementById('cube-scene').addEventListener('click', rollDice);
         // FŐ INDÍTÓ ESEMÉNY (Felhasználói interakció szükséges a böngészők miatt)
         startBtn.addEventListener('click', () => {
-        requestWakeLock();
-        initMotion();
-        rollDice(); // Egy kezdő dobás
-        startBtn.style.display = 'none'; // Elrejtjük a gombot az indítás után
+            requestWakeLock();
+            initMotion();
+            rollDice(); // Egy kezdő dobás
+            startBtn.style.display = 'none'; // Elrejtjük a gombot az indítás után
+        });
+        // Ha a felhasználó háttérbe rakja a böngészőt, majd visszatér, a Wake Lock-ot újra kell kérni
+        document.addEventListener('visibilitychange', async () => {
+        if (wakeLock !== null && document.visibilityState === 'visible') {
+            await requestWakeLock();
+        }
     });
-    // Ha a felhasználó háttérbe rakja a böngészőt, majd visszatér, a Wake Lock-ot újra kell kérni
-    document.addEventListener('visibilitychange', async () => {
-    if (wakeLock !== null && document.visibilityState === 'visible') {
-        await requestWakeLock();
-    }
-});
+    </script>
+</body>
+</html>
