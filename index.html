@@ -173,21 +173,26 @@
         function rollDice() {
             if (isRolling) return;
             isRolling = true;
-
+        
             const result = Math.floor(Math.random() * 6) + 1;
             
-            // Extra pördülések hozzáadása a drámai hatásért (360 fok többszörösei)
-            const extraX = (Math.floor(Math.random() * 3) + 2) * 360;
-            const extraY = (Math.floor(Math.random() * 3) + 2) * 360;
-
+            // DRÁMAI HATÁS: Megnöveltük a fordulatokat (360 fok helyett akár 4-5 teljes kört is pördül)
+            // Most már a Z tengelyt (csavarás) is vadul pörgetjük, így nem csak az oldalán forog!
+            const extraX = (Math.floor(Math.random() * 3) + 4) * 360; // 4-6 teljes fordulat X tengelyen
+            const extraY = (Math.floor(Math.random() * 3) + 4) * 360; // 4-6 teljes fordulat Y tengelyen
+            const extraZ = (Math.floor(Math.random() * 4) + 2) * 360; // 2-5 teljes fordulat Z tengelyen (bukdácsolás)
+        
+            // A kiválasztott lap alaphelyzete + a rengeteg extra pörgés mindhárom tengelyen
             const targetX = faceRotations[result].x + extraX;
             const targetY = faceRotations[result].y + extraY;
-
-            cube.style.transform = `rotateX(${targetX}deg) rotateY(${targetY}deg)`;
-
+            const targetZ = extraZ; // A Z tengelyen mindegy hol áll meg, mert a lapok helyzetét az X és Y határozza meg
+        
+            // Mindhárom tengely forgatását átadjuk a CSS-nek egyszerre
+            cube.style.transform = `rotateX(${targetX}deg) rotateY(${targetY}deg) rotateZ(${targetZ}deg)`;
+        
             setTimeout(() => {
                 isRolling = false;
-            }, 1500); // megvárja az animáció végét
+            }, 1500); // 1.5 másodpercig tart a kaotikus pörgés
         }
 
         // Képernyő ébren tartásának kérése
