@@ -209,23 +209,27 @@
 
         // Gyorsulásmérő kezelése
         let lastX = null, lastY = null, lastZ = null;
-        const threshold = 18; // rázási érzékenység határértéke
+        const threshold = 12; // rázási érzékenység határértéke
 
         function handleMotion(event) {
-            const acc = event.accelerationIncludingGravity;
-            if (!acc.x) return;
-
+            // Egyes újabb Androidokon és iOS-en az event.acceleration-t kell használni, ha az IncludingGravity nem megy
+            const acc = event.acceleration || event.accelerationIncludingGravity;
+            if (!acc || acc.x === null || acc.y === null || acc.z === null) return;
+        
             if (lastX !== null) {
                 let deltaX = Math.abs(acc.x - lastX);
                 let deltaY = Math.abs(acc.y - lastY);
                 let deltaZ = Math.abs(acc.z - lastZ);
-
-                // Ha bármelyik két tengelyen hirtelen nagy elmozdulás történik (rázás)
-                if ((deltaX > threshold && deltaY > threshold) || (deltaX > threshold && deltaZ > threshold)) {
+        
+                // Lejjebb vettem a küszöböt 12-re, hogy kisebb rázásra is azonnal beugorjon
+                const currentThreshold = 12; 
+        
+                // Ha bármelyik tengelyen hirtelen megmozdul a telefon
+                if (deltaX > currentThreshold || deltaY > currentThreshold || deltaZ > currentThreshold) {
                     rollDice();
                 }
             }
-
+        
             lastX = acc.x;
             lastY = acc.y;
             lastZ = acc.z;
